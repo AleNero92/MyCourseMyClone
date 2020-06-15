@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -21,12 +22,21 @@ namespace MyCourse
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-      public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+      //IApplicationLifetime mi permette di registrare un pezzo di codice che verrà eseguito dopo l avvio dell applicazione
+      public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
       {
          //if (env.IsDevelopment())
          if (env.IsEnvironment("Development"))
          {
             app.UseDeveloperExceptionPage();
+
+            lifetime.ApplicationStarted.Register(() =>
+            {
+               //concateno il nome del path con la directiry bin
+               //in settings.json faccio in modo che browsersync controlli i cambiamenti di questo file
+               string filePath = Path.Combine(env.ContentRootPath, "bin/reload.txt");
+               File.WriteAllText(filePath, DateTime.Now.ToString());
+            });
          }
          app.UseStaticFiles();
 
