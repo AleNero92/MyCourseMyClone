@@ -14,5 +14,10 @@ namespace MyCourse.Controllers
          return Content($"Sono Deatil e ho ricevuto l 'id {id}");
       }
 
+      public IActionResult Search(string titolo)
+      {
+         return Content($"Hai cercato {titolo}");
+      }
+
    }
 }
